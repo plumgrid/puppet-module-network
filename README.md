@@ -97,3 +97,26 @@ wireless networks:
       },
       auto => ["wlan0"],
     }
+
+Multiple entries for the same command are simply done as array:
+
+   class { "network::interfaces":
+      interfaces => {
+       "eth0" => {
+         "method" => "manual",
+         "up"     => [ "ifconfig \$IFACE 0.0.0.0 up",
+                       "ip link set \$IFACE promisc on" ],
+         "down"   => "ifconfig \$IFACE down",
+       },
+      },
+     auto => ["eth0"],
+    }
+
+will return
+
+  iface eth2 inet manual
+     down ifconfig $IFACE down
+     up ifconfig $IFACE 0.0.0.0 up
+     up ip link set $IFACE promisc on
+
+
